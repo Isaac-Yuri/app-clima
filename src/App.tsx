@@ -1,7 +1,10 @@
+import Weather from "./components/Weather";
+
 function App() {
   return (
     <>
-      <h1>Hello World</h1>
+      <h1>Previsão do tempo para Tacima</h1>
+      <Weather />
     </>
   );
 }
