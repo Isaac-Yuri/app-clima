@@ -55,7 +55,7 @@ function Weather() {
       {weatherData && (
         <div>
           <div className="box-image-weather">
-            <img src="01d.png" alt="Ícone do clima" id="image-weather" />
+            <img src={`${weatherData.weather[0].icon}.png`} alt="Ícone do clima" id="image-weather" />
           </div>
           <div className="box-temperature">
             <span id="temperature">{(weatherData.main.temp - 273.15).toFixed(2)}°C</span>
@@ -65,10 +65,10 @@ function Weather() {
           </div>
           <div className="box-wind-humidity">
             <div className="box-humidity">
-              Humidity: {weatherData.main.humidity}%
+              Umidade: {weatherData.main.humidity}%
             </div>
             <div className="box-wind">
-              Wind Speed: {weatherData.wind.speed} km/h
+              Velocidade do vento: {weatherData.wind.speed} km/h
             </div>
           </div>
         </div>
