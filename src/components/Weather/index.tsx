@@ -55,7 +55,7 @@ function Weather() {
       {weatherData && (
         <div>
           <div className="box-image-weather">
-            <img src="" alt="Ícone do clima" id="image-weather" />
+            <img src="01d.png" alt="Ícone do clima" id="image-weather" />
           </div>
           <div className="box-temperature">
             <span id="temperature">{(weatherData.main.temp - 273.15).toFixed(2)}°C</span>
