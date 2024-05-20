@@ -1,11 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
   box-sizing: border-box;
-  background-image: url("/public/background.jpg");
+  background-image: url("/background.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
