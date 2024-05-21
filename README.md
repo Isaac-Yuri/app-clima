@@ -78,6 +78,7 @@ Se você tiver uma sugestão que possa melhorar este projeto, por favor, faça u
 
 <span id="license">
 <!-- LICENSE -->
+
 ## 📝 Licença
 
 Esse projeto está sob licença. Veja o arquivo <a href="LICENSE">LICENÇA</a> para mais detalhes.
