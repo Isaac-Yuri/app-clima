@@ -30,7 +30,7 @@ function Weather() {
   const [weatherData, setWeatherDada] = useState<IWeatherData>();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setCity(e.target.value);
+    setCity(e.target.value.trim());
   }
 
   async function handleWeatherData() {
