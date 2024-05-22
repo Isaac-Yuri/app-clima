@@ -6,9 +6,9 @@ import Humidity from "/humidity.svg";
 import Wind from "/wind.svg";
 
 interface IWeatherData {
-  weather: {description:string, icon:string}[];
-  main: {temp: number, humidity: number};
-  wind: {speed: number};
+  weather: { description: string; icon: string }[];
+  main: { temp: number; humidity: number };
+  wind: { speed: number };
   name: string;
 }
 
