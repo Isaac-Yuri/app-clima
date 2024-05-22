@@ -58,6 +58,11 @@ function Weather() {
           type="text"
           value={city}
           className="w-full h-full bg-transparent border-2 border-white border-opacity-10 outline-none rounded-lg md:text-xl text-sm text-white font-medium uppercase p-4 px-11 placeholder-white placeholder-capitalize"
+          onKeyUp={(event) => {
+            if (event.key === "Enter") {
+              handleWeatherData()
+            }
+          }}
         />
         <button className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border">
           <img
