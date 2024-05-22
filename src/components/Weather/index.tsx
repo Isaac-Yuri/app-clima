@@ -17,16 +17,30 @@ function Weather() {
   const [weatherData, setWeatherDada] = useState<IWeatherData>();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setCity(e.target.value.trim());
+    setCity(e.target.value);
   }
 
   async function handleWeatherData() {
-    const response = await fetch(
-      `${BASE_URL_API}?q=${city}&appid=${API_KEY}&lang=pt_br`
-    );
-    const data = await response.json();
-    setWeatherDada(data);
-    console.log(data);
+    if (!city) {
+      alert("Campo vazio ou nome da cidade incorreto!")
+      return
+    }
+
+    try {
+      const response = await fetch(
+        `${BASE_URL_API}?q=${city}&appid=${API_KEY}&lang=pt_br`
+      );
+
+      if(!response.ok) {
+        alert("Falha ao buscar dados do clima")
+        throw new Error("Falha ao buscar dados do clima");
+      }
+
+      const data = await response.json();
+      setWeatherDada(data);
+    } catch (error) {
+      throw new Error("Erro ao buscar dados do clima: " + error)
+    }
   }
 
   return (
