@@ -22,8 +22,8 @@ function Weather() {
 
   async function handleWeatherData() {
     if (!city) {
-      alert("Campo vazio ou nome da cidade incorreto!")
-      return
+      alert("Campo vazio ou nome da cidade incorreto!");
+      return;
     }
 
     try {
@@ -31,15 +31,15 @@ function Weather() {
         `${BASE_URL_API}?q=${city}&appid=${API_KEY}&lang=pt_br`
       );
 
-      if(!response.ok) {
-        alert("Falha ao buscar dados do clima")
+      if (!response.ok) {
+        alert("Falha ao buscar dados do clima");
         throw new Error("Falha ao buscar dados do clima");
       }
 
       const data = await response.json();
       setWeatherDada(data);
     } catch (error) {
-      throw new Error("Erro ao buscar dados do clima: " + error)
+      throw new Error("Erro ao buscar dados do clima: " + error);
     }
   }
 
