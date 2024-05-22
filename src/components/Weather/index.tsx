@@ -1,4 +1,5 @@
 import { ChangeEvent, useState } from "react";
+import LoadingSpin from "../LoadingSpin";
 import { BASE_URL_API, API_KEY } from "../../api";
 import Map from "/map.svg";
 import Search from "/search.svg";
@@ -14,6 +15,7 @@ interface IWeatherData {
 
 function Weather() {
   const [city, setCity] = useState("");
+  const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherDada] = useState<IWeatherData>();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -27,6 +29,7 @@ function Weather() {
     }
 
     try {
+      setLoading(true);
       const response = await fetch(
         `${BASE_URL_API}?q=${city}&appid=${API_KEY}&lang=pt_br`
       );
@@ -40,6 +43,8 @@ function Weather() {
       setWeatherDada(data);
     } catch (error) {
       throw new Error("Erro ao buscar dados do clima: " + error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -60,17 +65,21 @@ function Weather() {
           className="w-full h-full bg-transparent border-2 border-white border-opacity-10 outline-none rounded-lg md:text-xl text-sm text-white font-medium uppercase p-4 px-11 placeholder-white placeholder-capitalize"
           onKeyUp={(event) => {
             if (event.key === "Enter") {
-              handleWeatherData()
+              handleWeatherData();
             }
           }}
         />
         <button className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border">
-          <img
-            className="absolute h-6 w-6"
-            src={Search}
-            alt=""
-            onClick={handleWeatherData}
-          />
+          {loading ? (
+            <LoadingSpin />
+          ) : (
+            <img
+              className="absolute h-6 w-6"
+              src={Search}
+              alt=""
+              onClick={handleWeatherData}
+            />
+          )}
         </button>
       </div>
       {weatherData && (
@@ -90,7 +99,7 @@ function Weather() {
             <p>{weatherData.name}:</p>
             <p>{weatherData.weather[0].description}</p>
           </div>
-          <div className="flex flex-col md:flex-row w-full justify-around my-5 gap-3 md:gap-5 px-20 md:px-0 " >
+          <div className="flex flex-col md:flex-row w-full justify-around my-5 gap-3 md:gap-5 px-20 md:px-0 ">
             <div className="flex justify-start gap-3 md:justify-center">
               <img className="w-10 md:w-14" src={Humidity} alt="" />
               <div className="leading-6">
