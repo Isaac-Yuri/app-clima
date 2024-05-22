@@ -5,24 +5,11 @@ import Search from "/search.svg";
 import Humidity from "/humidity.svg";
 import Wind from "/wind.svg";
 
-interface IWeather {
-  description: string;
-  icon: string;
-  main: string;
-}
-interface IMain {
-  temp: number;
-  humidity: number;
-}
-
-interface IWind {
-  speed: number;
-}
 interface IWeatherData {
-  main: IMain;
-  weather: IWeather[];
+  weather: {description:string, icon:string}[];
+  main: {temp: number, humidity: number};
+  wind: {speed: number};
   name: string;
-  wind: IWind;
 }
 
 function Weather() {
