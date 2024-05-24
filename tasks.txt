@@ -1,5 +1,4 @@
-[] - Fazer o botão de busca automática de localidade funcionar
+[X] - Fazer o botão de busca automática de localidade funcionar
 [] - Fazer um header com menu
     [] - Criar 3 elementos de home, contato, e sobre
     [] - Deixar responsivo
-[] - Criar testes
