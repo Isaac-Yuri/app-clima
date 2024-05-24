@@ -16,37 +16,69 @@ interface IWeatherData {
 function Weather() {
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
-  const [weatherData, setWeatherDada] = useState<IWeatherData>();
+  const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Seu navegador não permite usar a geolocalização");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        showCityName(coords.longitude, coords.latitude);
+      },
+      () => {
+        alert("Não foi possível obter sua localização");
+      }
+    );
+  };
+
+  const showCityName = async (longitude: number, latitude: number) => {
+    const ACCESS_TOKEN =
+      "pk.eyJ1IjoiaXNhYWMteXVyaSIsImEiOiJjbHdrbWE0eG8xZHA5MmltamNzYWd3dGs5In0.Tp207B8r-JLg2Ob0URWRHg";
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${ACCESS_TOKEN}`;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const cityName = data.features[2]?.text || "Localização desconhecida";
+      setCity(cityName);
+    } catch (error) {
+      alert("Erro ao buscar o nome da cidade");
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value);
-  }
+  };
 
-  async function handleWeatherData() {
+  const handleWeatherData = async () => {
     if (!city) {
       alert("Campo vazio ou nome da cidade incorreto!");
       return;
     }
 
+    setLoading(true);
+
     try {
-      setLoading(true);
       const response = await fetch(
         `${BASE_URL_API}?q=${city}&appid=${API_KEY}&lang=pt_br`
       );
 
       if (!response.ok) {
         alert("Falha ao buscar dados do clima");
-        throw new Error("Falha ao buscar dados do clima");
+        return;
       }
 
       const data = await response.json();
-      setWeatherDada(data);
+      setWeatherData(data);
     } catch (error) {
-      throw new Error("Erro ao buscar dados do clima: " + error);
+      alert("Erro ao buscar dados do clima: " + error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="border-solid border-2 border-[#ffffff33] flex flex-col justify-center items-center p-4 rounded-2xl text-white backdrop-blur-lg bg-[#ffffff19] min-w-[92%] md:min-w-[100%] min-h-16 max-w-full md:max-w-lg lg:max-w-xl">
@@ -55,7 +87,8 @@ function Weather() {
           className="absolute left-3 w-6 cursor-pointer z-10"
           src={Map}
           id="icon-map"
-          alt=""
+          alt="Map Icon"
+          onClick={getLocation}
         />
         <input
           onChange={handleChange}
@@ -69,16 +102,14 @@ function Weather() {
             }
           }}
         />
-        <button className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border">
+        <button
+          className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border"
+          onClick={handleWeatherData}
+        >
           {loading ? (
             <LoadingSpin />
           ) : (
-            <img
-              className="absolute h-6 w-6"
-              src={Search}
-              alt=""
-              onClick={handleWeatherData}
-            />
+            <img className="absolute h-6 w-6" src={Search} alt="Search Icon" />
           )}
         </button>
       </div>
@@ -101,14 +132,18 @@ function Weather() {
           </div>
           <div className="flex flex-col md:flex-row w-full justify-around my-5 gap-3 md:gap-5 px-20 md:px-0 ">
             <div className="flex justify-start gap-3 md:justify-center">
-              <img className="w-10 md:w-14" src={Humidity} alt="" />
+              <img
+                className="w-10 md:w-14"
+                src={Humidity}
+                alt="Humidity Icon"
+              />
               <div className="leading-6">
                 <div>{weatherData.main.humidity}%</div>
                 <p>Umidade</p>
               </div>
             </div>
             <div className="flex justify-start gap-3 md:justify-center">
-              <img className="md:w-14 w-10" src={Wind} alt="" />
+              <img className="md:w-14 w-10" src={Wind} alt="Wind Icon" />
               <div className="leading-6">
                 <div>{weatherData.wind.speed} km/h</div>
                 <p>Velocidade do vento</p>
