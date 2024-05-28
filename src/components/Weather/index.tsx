@@ -81,8 +81,8 @@ function Weather() {
   };
 
   const handleOnClickButton = () => {
-      handleWeatherData(city)
-  }
+    handleWeatherData(city);
+  };
 
   return (
     <div className="border-solid border-2 border-[#ffffff33] flex flex-col justify-center items-center p-4 rounded-2xl text-white backdrop-blur-lg bg-[#ffffff19] min-w-[92%] md:min-w-[100%] min-h-16 max-w-full md:max-w-lg lg:max-w-xl">
@@ -120,9 +120,10 @@ function Weather() {
       {weatherData && (
         <div className="flex flex-col justify-center items-center my-3 md:my-10 w-full">
           <img
+            key={weatherData.name}
             src={`${weatherData.weather[0].icon}.png`}
             alt="Ícone do clima"
-            className="w-52 md:w-64"
+            className="w-52 md:w-64 animate-fade-down"
           />
           <p className="relative leading-3 font-bold text-4xl my-5 md:text-5xl md:my-7">
             {(weatherData.main.temp - 273.15).toFixed(2)}
