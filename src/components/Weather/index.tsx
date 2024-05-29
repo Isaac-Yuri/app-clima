@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import LoadingSpin from "../LoadingSpin";
+import CityNotFound from "../CityNotFound";
 import { BASE_URL_API, API_KEY } from "../../api";
 import Map from "/map.svg";
 import Search from "/search.svg";
@@ -18,6 +19,7 @@ function Weather() {
   const [loading, setLoading] = useState(false);
   const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
   const [animation, setAnimation] = useState(true);
+  const [cityNotFound, setCityNotFound] = useState(false);
 
   const getLocation = () => {
     if (!navigator.geolocation) {
@@ -61,6 +63,7 @@ function Weather() {
     }
 
     setLoading(true);
+    setCityNotFound(false);
 
     try {
       const response = await fetch(
@@ -69,12 +72,14 @@ function Weather() {
 
       if (!response.ok) {
         alert("Falha ao buscar dados do clima");
+        setCityNotFound(true);
         return;
       }
 
       const data = await response.json();
       setWeatherData(data);
     } catch (error) {
+      setCityNotFound(true);
       alert("Erro ao buscar dados do clima: " + error);
     } finally {
       setLoading(false);
@@ -128,87 +133,94 @@ function Weather() {
           )}
         </button>
       </div>
-      {weatherData && (
-        <div className="flex flex-col justify-center items-center my-3 md:my-10 w-full">
-          <img
-            key={weatherData.name}
-            src={`${weatherData.weather[0].icon}.png`}
-            alt="Ícone do clima"
-            className={`w-52 md:w-64 ${animation ? "animate-fade-down" : ""}`}
-          />
-          <p
-            key={`${weatherData.name}-temperature`}
-            className={`relative leading-3 font-bold text-4xl my-5 md:text-5xl md:my-7 ${
-              animation ? "animate-fade-down" : ""
-            }`}
-          >
-            {(weatherData.main.temp - 273.15).toFixed(2)}
-            <span className="absolute text-xl md:text-3xl mx-1 bottom-1">
-              °C
-            </span>
-          </p>
-          <div className="flex flex-col md:flex-row gap-2 md:gap-6 capitalize text-xl md:text-2xl font-semibold text-center">
+      {cityNotFound ? (
+        <CityNotFound />
+      ) : (
+        weatherData && (
+          <div className="flex flex-col justify-center items-center my-3 md:my-10 w-full">
+            <img
+              key={weatherData.name}
+              src={`${weatherData.weather[0].icon}.png`}
+              alt="Ícone do clima"
+              className={`w-52 md:w-64 ${animation ? "animate-fade-down" : ""}`}
+            />
             <p
-              key={`${weatherData.name}-city`}
-              className={`${animation ? "animate-fade-right" : ""}`}
+              key={`${weatherData.name}-temperature`}
+              className={`relative leading-3 font-bold text-4xl my-5 md:text-5xl md:my-7 ${
+                animation ? "animate-fade-down" : ""
+              }`}
             >
-              {weatherData.name}:
+              {(weatherData.main.temp - 273.15).toFixed(2)}
+              <span className="absolute text-xl md:text-3xl mx-1 bottom-1">
+                °C
+              </span>
             </p>
-            <p
-              key={`${weatherData.name}-description`}
-              className={`${animation ? "animate-fade-left" : ""}`}
-            >
-              {weatherData.weather[0].description}
-            </p>
-          </div>
-          <div className="flex flex-col md:flex-row w-full justify-around my-5 gap-3 md:gap-5 px-20 md:px-0 ">
-            <div className="flex justify-start gap-3 md:justify-center">
-              <img
-                key={`${weatherData.name}-humidity-icon`}
-                className={`w-10 md:w-14 ${
-                  animation ? "animate-fade-right" : ""
-                }`}
-                src={Humidity}
-                alt="Humidity Icon"
-              />
-              <div className="leading-6">
-                <div
-                  key={`${weatherData.name}-humidity-percent`}
-                  className="animate-fade-down"
-                >
-                  {weatherData.main.humidity}%
+            <div className="flex flex-col md:flex-row gap-2 md:gap-6 capitalize text-xl md:text-2xl font-semibold text-center">
+              <p
+                key={`${weatherData.name}-city`}
+                className={`${animation ? "animate-fade-right" : ""}`}
+              >
+                {weatherData.name}:
+              </p>
+              <p
+                key={`${weatherData.name}-description`}
+                className={`${animation ? "animate-fade-left" : ""}`}
+              >
+                {weatherData.weather[0].description}
+              </p>
+            </div>
+            <div className="flex flex-col md:flex-row w-full justify-around my-5 gap-3 md:gap-5 px-20 md:px-0 ">
+              <div className="flex justify-start gap-3 md:justify-center">
+                <img
+                  key={`${weatherData.name}-humidity-icon`}
+                  className={`w-10 md:w-14 ${
+                    animation ? "animate-fade-right" : ""
+                  }`}
+                  src={Humidity}
+                  alt="Humidity Icon"
+                />
+                <div className="leading-6">
+                  <div
+                    key={`${weatherData.name}-humidity-percent`}
+                    className="animate-fade-down"
+                  >
+                    {weatherData.main.humidity}%
+                  </div>
+                  <p
+                    key={`${weatherData.name}-humidity`}
+                    className="animate-fade-up"
+                  >
+                    Umidade
+                  </p>
                 </div>
-                <p
-                  key={`${weatherData.name}-humidity`}
-                  className="animate-fade-up"
-                >
-                  Umidade
-                </p>
+              </div>
+              <div className="flex justify-start gap-3 md:justify-center">
+                <img
+                  key={`${weatherData.name}-wind-icon`}
+                  className={`w-10 md:w-14 ${
+                    animation ? "animate-fade-right" : ""
+                  }`}
+                  src={Wind}
+                  alt="Wind Icon"
+                />
+                <div className="leading-6">
+                  <div
+                    key={`${weatherData.name}-wind-speed`}
+                    className="animate-fade-down"
+                  >
+                    {weatherData.wind.speed} km/h
+                  </div>
+                  <p
+                    key={`${weatherData.name}-wind`}
+                    className="animate-fade-up"
+                  >
+                    Velocidade do vento
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex justify-start gap-3 md:justify-center">
-              <img
-                key={`${weatherData.name}-wind-icon`}
-                className={`w-10 md:w-14 ${
-                  animation ? "animate-fade-right" : ""
-                }`}
-                src={Wind}
-                alt="Wind Icon"
-              />
-              <div className="leading-6">
-                <div
-                  key={`${weatherData.name}-wind-speed`}
-                  className="animate-fade-down"
-                >
-                  {weatherData.wind.speed} km/h
-                </div>
-                <p key={`${weatherData.name}-wind`} className="animate-fade-up">
-                  Velocidade do vento
-                </p>
-              </div>
-            </div>
           </div>
-        </div>
+        )
       )}
     </div>
   );
