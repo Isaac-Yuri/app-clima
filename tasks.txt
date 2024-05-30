@@ -2,4 +2,4 @@
 [] - Fazer um header com menu
     [] - Criar 3 elementos de home, contato, e sobre
     [] - Deixar responsivo
-[] - Fazer componente para quando uma cidade não for achada
+[X] - Fazer componente para quando uma cidade não for achada
