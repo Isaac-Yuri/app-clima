@@ -71,7 +71,6 @@ function Weather() {
       );
 
       if (!response.ok) {
-        alert("Falha ao buscar dados do clima");
         setCityNotFound(true);
         return;
       }
@@ -100,6 +99,20 @@ function Weather() {
     setAnimation(true);
   }, [animation, weatherData]);
 
+  useEffect(() => {
+    const handleEnterPress = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        handleWeatherData(city);
+      }
+    };
+
+    window.addEventListener("keydown", handleEnterPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleEnterPress);
+    };
+  }, [city]);
+
   return (
     <div className="border-solid border-2 border-[#ffffff33] flex flex-col justify-center items-center p-4 rounded-2xl text-white backdrop-blur-lg bg-[#ffffff19] min-w-[92%] md:min-w-[100%] min-h-16 max-w-full md:max-w-lg lg:max-w-xl">
       <div className="relative w-full h-full flex items-center">
@@ -116,11 +129,6 @@ function Weather() {
           type="text"
           value={city}
           className="w-full h-full bg-transparent border-2 border-white border-opacity-10 outline-none rounded-lg md:text-xl text-sm text-white font-medium uppercase p-4 px-11 placeholder-white placeholder-capitalize"
-          onKeyUp={(event) => {
-            if (event.key === "Enter") {
-              handleWeatherData(city);
-            }
-          }}
         />
         <button
           className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border"
