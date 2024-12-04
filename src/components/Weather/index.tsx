@@ -1,11 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import LoadingSpin from "../LoadingSpin";
 import CityNotFound from "../CityNotFound";
 import { BASE_URL_API, API_KEY } from "../../api";
-import Map from "/map.svg";
-import Search from "/search.svg";
 import Humidity from "/humidity.svg";
 import Wind from "/wind.svg";
+import CitySearchInput from "../CitySearchInput";
 
 interface IWeatherData {
   weather: { description: string; icon: string }[];
@@ -20,37 +18,6 @@ function Weather() {
   const [weatherData, setWeatherData] = useState<IWeatherData | null>(null);
   const [animation, setAnimation] = useState(true);
   const [cityNotFound, setCityNotFound] = useState(false);
-
-  const getLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Seu navegador não permite usar a geolocalização");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        showCityName(coords.longitude, coords.latitude);
-      },
-      () => {
-        alert("Não foi possível obter sua localização");
-      }
-    );
-  };
-
-  const showCityName = async (longitude: number, latitude: number) => {
-    const ACCESS_TOKEN =
-      "pk.eyJ1IjoiaXNhYWMteXVyaSIsImEiOiJjbHdrbWE0eG8xZHA5MmltamNzYWd3dGs5In0.Tp207B8r-JLg2Ob0URWRHg";
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${ACCESS_TOKEN}`;
-
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      const cityName = data.features[2]?.text || "Localização desconhecida";
-      setCity(cityName);
-    } catch (error) {
-      alert("Erro ao buscar o nome da cidade");
-    }
-  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value);
@@ -115,32 +82,16 @@ function Weather() {
 
   return (
     <div className="border-solid border-2 border-[#ffffff33] flex flex-col justify-center items-center p-4 rounded-2xl text-white backdrop-blur-lg bg-[#ffffff19] min-w-[92%] md:min-w-[100%] min-h-16 max-w-full md:max-w-lg lg:max-w-xl">
-      <div className="relative w-full h-full flex items-center">
-        <img
-          className="absolute left-3 w-6 cursor-pointer z-10"
-          src={Map}
-          id="icon-map"
-          alt="Map Icon"
-          onClick={getLocation}
-        />
-        <input
-          onChange={handleChange}
-          placeholder="Digite aqui uma cidade"
-          type="text"
-          value={city}
-          className="w-full h-full bg-transparent border-2 border-white border-opacity-10 outline-none rounded-lg md:text-xl text-sm text-white font-medium uppercase p-4 px-11 placeholder-white placeholder-capitalize"
-        />
-        <button
-          className="flex justify-center items-center absolute right-0 w-10 h-full bg-transparent border-none outline-none text-2xl px-[15px] md:px-[28px] pl-[5px] cursor-pointer box-border"
-          onClick={handleOnClickButton}
-        >
-          {loading ? (
-            <LoadingSpin />
-          ) : (
-            <img className="absolute h-6 w-6" src={Search} alt="Search Icon" />
-          )}
-        </button>
-      </div>
+      
+      <CitySearchInput
+        setLoading={setLoading}
+        setCity={setCity}
+        handleChange={handleChange}
+        handleOnClickButton={handleOnClickButton}
+        city={city}
+        loading={loading}
+      />
+
       {cityNotFound ? (
         <CityNotFound />
       ) : (
