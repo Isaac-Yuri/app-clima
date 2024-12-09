@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import CityNotFound from "../CityNotFound";
-import { BASE_URL_API, API_KEY } from "../../api";
+import CityNotFound from "./CityNotFound";
+import { BASE_URL_API, API_KEY } from "../api";
 import Humidity from "/humidity.svg";
 import Wind from "/wind.svg";
-import CitySearchInput from "../CitySearchInput";
+import CitySearchInput from "./CitySearchInput";
 
 interface IWeatherData {
   weather: { description: string; icon: string }[];
