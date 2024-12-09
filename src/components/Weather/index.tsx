@@ -114,7 +114,7 @@ function Weather() {
                 °C
               </span>
             </p>
-            <div className="flex flex-col md:flex-row gap-2 md:gap-6 capitalize text-xl md:text-2xl font-semibold text-center">
+            <div className="flex flex-col md:flex-row gap-1 capitalize text-xl md:text-2xl font-semibold text-center">
               <p
                 key={`${weatherData.name}-city`}
                 className={`${animation ? "animate-fade-right" : ""}`}
